@@ -28,8 +28,8 @@ const App = () => {
   const numClickHandler = (e) => {
     e.preventDefault();
     const value = e.target.innerHTML;
-
-    if (removeSpaces(calc.num).length < 16) {
+    console.log(calc.num,removeSpaces(calc.num).length)
+    if (removeSpaces(calc.num).length < 9) {
       setCalc({
         ...calc,
         num:

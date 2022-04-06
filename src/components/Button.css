@@ -1,39 +1,41 @@
 button {
   border: none;
   background-color: #505050;
-  font-size: 24px;
+  font-size: 20px;
   color:#FFFFFF;
   font-weight: bold;
   cursor: pointer; 
-  border-radius:  20px;
+  border-radius:  5px;
   outline: none;
 }
 
 .arthimetic {
   border: none;
   background-color: #FF9500;
-  font-size: 24px;
+  font-size: 20px;
   color: rgb(255, 255, 255);
   font-weight: bold;
   cursor: pointer;
-  border-radius:20px;
+  border-radius:5px;
   outline: none;
 }
 
 
-.arthimetic:hover{
+/*.arthimetic:hover{
   background-color: rgb(243, 61, 29);
-}
-
-button:hover {
-  background-color: #D4D4D2;
-}
-
+}*/
 .equals {
   grid-column: 3 / 5;
   background-color: #FF9500;
 }
+/*
+button:hover {
+  background-color: #D4D4D2;
+}
+
+
 
 .equals:hover {
   background-color: rgb(243, 61, 29);
 }
+*/
