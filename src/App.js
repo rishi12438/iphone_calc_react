@@ -24,25 +24,40 @@ const App = () => {
     num: 0,
     res: 0,
   });
-
   const numClickHandler = (e) => {
     e.preventDefault();
+    
     const value = e.target.innerHTML;
-    console.log(calc.num,removeSpaces(calc.num).length)
-    if (removeSpaces(calc.num).length < 9) {
-      setCalc({
-        ...calc,
-        num:
-          calc.num === 0 && value === "0"
-            ? "0"
-            : removeSpaces(calc.num) % 1 === 0
-            ? toLocaleString(Number(removeSpaces(calc.num + value)))
-            : toLocaleString(calc.num + value),
-        res: !calc.sign ? 0 : calc.res,
-      });
+    if(calc.num === "Err" || calc.res === "Err"){ 
+      return 
     }
-  };
+    var current_num = calc.num >=1000000000  ?  Number(calc.num).toPrecision() : calc.num
+    var finalNumAns = "0"
+    
+    if(removeSpaces(current_num) % 1 === 0){ 
+      if(Number(removeSpaces(current_num+ value)) < 1000000000){ 
+        finalNumAns = toLocaleString(Number(removeSpaces(current_num + value)))
+      }
+      else{ 
+        finalNumAns = toLocaleString(Number(removeSpaces(current_num + value)).toExponential())
+      }
+    } else{ 
+      if(current_num+ value  < 1000000000){ 
+        finalNumAns = toLocaleString(current_num+ value)
+      }
+      else{ 
+        finalNumAns = toLocaleString((current_num + value).toExponential())
+      }
+    }
 
+    setCalc({
+      ...calc,
+      num:finalNumAns,
+      res: !calc.sign ? 0 : calc.res,
+    });
+
+  };
+  
   const pointClickHandler = (e) => {
     e.preventDefault();
     const value = e.target.innerHTML;
@@ -54,11 +69,51 @@ const App = () => {
   };
 
   const signClickHandler = (e) => {
+    if(calc.res === "Err"){ 
+      return 
+    }
+
+    var result = calc.res; 
+    var finalSecondNum = calc.num
+    
+    //if sign already exists
+    if (calc.sign !== "") {
+      finalSecondNum = removeSpaces(finalSecondNum)
+      var sign = calc.sign
+      if(calc.sign === "X"){ 
+        sign = "*"
+      } 
+      try{ 
+        result = eval(removeSpaces(calc.res).toString()+ sign+ finalSecondNum.toString())
+      } catch(err){ 
+        result = "Infinity"
+      }
+
+      //checking if division by 0 s
+      if(result == "Infinity"){ 
+        result = "Err"
+        finalSecondNum = "Err"
+      } else{ 
+        result = Number(result)
+        result = result  >= 1000000000 ? result.toExponential() : result
+        result = toLocaleString(result)
+        finalSecondNum = 0 
+      }
+    }
+    else{
+      //else just invert the values from result and finalSecondNum  
+      if(Number(finalSecondNum) !== 0  ){ 
+        result = toLocaleString(finalSecondNum)
+      }     
+      finalSecondNum = 0 
+    }
+
+    //change state
     setCalc({
       ...calc,
       sign: e.target.innerHTML,
-      res: !calc.res && calc.num ? calc.num : calc.res,
-      num: 0,
+      res: result,
+      num: finalSecondNum,
     });
   };
 
@@ -66,12 +121,12 @@ const App = () => {
     if (calc.sign && calc.num) {
       const math = (a, b, sign) =>
         sign === "+"
-          ? a + b >= 100000000 ? (a+b).toExponential() : a+b 
+          ? a + b >= 1000000000 ? (a+b).toExponential() : a+b 
           : sign === "-"
-          ? a -b >= 100000000 ? (a-b).toExponential() : a-b 
+          ? a -b >= 1000000000 ? (a-b).toExponential() : a-b 
           : sign === "X"
-          ? a * b >= 100000000 ? (a*b).toExponential() : a*b
-          : a /b >= 100000000 ? (a/b).toExponential() : a/b
+          ? a * b >= 1000000000 ? (a*b).toExponential() : a*b
+          : a /b >= 1000000000 ? (a/b).toExponential() : a/b
 
       setCalc({
         ...calc,
